@@ -40,9 +40,10 @@ composer install
 ```
 3. Create a `database/database.sqlite` file to store the Snap data (or use any sql server you'd prefer).
 4. That's it for the back-end preparation!
-5. If you want to run the DevSnaps application, you need to clone the [front-end repo](https://github.com/AlexandreBonneau/devSnaps) as well then follow the instructions from [here](https://github.com/AlexandreBonneau/devSnaps#build-setup).
 
-For info, the back-end API server will run by default on port `4242`, but you can change that in the back-end configuration and in the `.env` file in the front-end repository.
+If you want to run the DevSnaps application, you need to clone the [front-end repo](https://github.com/AlexandreBonneau/devSnaps) as well then follow the instructions from [here](https://github.com/AlexandreBonneau/devSnaps#build-setup).<br>
+
+*Note: If you do not want to rename this repo to 'back-end' and put it along the front-end directory, you won't be able to run `yarn back` from the front-end repo, and can run the back-end server using `php -S localhost:4242 -t ./public`.*
 
 ## Contributing
 
