@@ -19,7 +19,7 @@ class SnapController extends Controller {
      *
      * @param  int $id
      *
-     * @return array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     * @return Snap|array|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
      */
     public function show($id) {
         try {
@@ -28,31 +28,33 @@ class SnapController extends Controller {
         } catch (\Exception $error) {
             return [
                 'error'        => true,
-                'errorMessage' => 'Unable to find the snap [' . $id . ']',
+                'errorMessage' => "Unable to find the snap $id",
             ];
         }
     }
 
     /**
+     * Create a new Snap.
+     *
      * @param Request $request
      *
      * @return array
      */
     public function create(Request $request) {
         try {
-            $this->validate( $request, [
+            $this->validate($request, [
                 'title'   => 'required',
                 'content' => 'required',
-            ] );
+            ]);
             Snap::create($request->all());
 
             return [
-                'error'   => FALSE,
-                'message' => 'Creating the snap "' . $request->get('title') . '" was successful.',
+                'error'   => false,
+                'message' => 'Creating the snap "'.$request->get('title').'" was successful.',
             ];
         } catch (\Exception $error) {
             return [
-                'error'        => TRUE,
+                'error'        => true,
                 'errorMessage' => 'Unable to create the Snap.',
             ];
         }
@@ -79,8 +81,8 @@ class SnapController extends Controller {
         ])->first();
         if (is_null($user)) {
             return [
-                'error' => true,
-                'errorMessage' => "User unknown ; cannot update any Snap",
+                'error'        => true,
+                'errorMessage' => 'User unknown ; cannot update any Snap',
             ];
         }
 
@@ -90,28 +92,28 @@ class SnapController extends Controller {
             // Then check that it's the same as the snap owner
             if ($snapToEdit->user_id != $user->id) { //XXX Compare the string '2' and number 2 with `!=` (and not `!==`)
                 return [
-                    'error' => true,
+                    'error'        => true,
                     'errorMessage' => "You cannot edit a Snap that do not belong to you.",
                 ];
             }
 
             // Everything is ok, update the Snap
-            $snapToEdit->title = $snapData['title'];
-            $snapToEdit->content = $snapData['content'];
-            $snapToEdit->slug = $snapData['slug'];
-            $snapToEdit->favorite = $snapData['favorite'];
+            $snapToEdit->title       = $snapData['title'];
+            $snapToEdit->content     = $snapData['content'];
+            $snapToEdit->slug        = $snapData['slug'];
+            $snapToEdit->favorite    = $snapData['favorite'];
             $snapToEdit->timesViewed = $snapData['timesViewed'];
             $snapToEdit->timesEdited = $snapData['timesEdited'];
             $snapToEdit->save();
 
             return [
-                'error' => false,
+                'error'   => false,
                 'message' => 'Updating the snap '.$snapData['id'].' was successful.',
             ];
         } catch (\Exception $error) {
             return [
-                'error' => true,
-                'errorMessage' => "Unable to find the snap with id ".$snapData['id'].".",
+                'error'        => true,
+                'errorMessage' => 'Unable to find the snap with id '.$snapData['id'].'.',
             ];
         }
     }
@@ -125,7 +127,7 @@ class SnapController extends Controller {
      */
     public function incrementViews(Request $request) {
         $dataJSON = $request->all();
-        $snapId = $dataJSON['snapId'];
+        $snapId   = $dataJSON['snapId'];
 
         try {
             // No check for a valid user is needed here
@@ -137,12 +139,12 @@ class SnapController extends Controller {
             $snapToEdit->save();
 
             return [
-                'error' => false,
+                'error'   => false,
                 'message' => "Updating the snap $snapId was successful.",
             ];
         } catch (\Exception $error) {
             return [
-                'error' => true,
+                'error'        => true,
                 'errorMessage' => "Unable to find the snap with id $snapId.",
             ];
         }
@@ -155,6 +157,7 @@ class SnapController extends Controller {
      * @return int
      */
     public function destroy($id) {
+        //TODO Check that only the author can delete the Snap
         return Snap::destroy($id);
     }
 
