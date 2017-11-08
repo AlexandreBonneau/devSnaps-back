@@ -27,34 +27,33 @@ class SnapController extends Controller {
             return Snap::with('user')->where('id', $id)->firstOrFail(); // Return the Snap data along with the User data
         } catch (\Exception $error) {
             return [
-                'error' => true,
-                'errorMessage' => "Unable to find the snap [".$id."]",
+                'error'        => true,
+                'errorMessage' => 'Unable to find the snap [' . $id . ']',
             ];
         }
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
     public function create(Request $request) {
-        $dataJSON = $request->all();
-
         try {
-            if (!isset($dataJSON['title'])) {
-                throw new \Exception('No title is set for the snap.');
-            }
-
-            if (!isset($dataJSON['content'])) {
-                throw new \Exception('No content is set for the snap.');
-            }
-
-            Snap::create($dataJSON);
+            $this->validate( $request, [
+                'title'   => 'required',
+                'content' => 'required',
+            ] );
+            Snap::create($request->all());
 
             return [
-                'error' => false,
-                'message' => 'Creating the snap "'.$dataJSON['title'].'" was successful.',
+                'error'   => FALSE,
+                'message' => 'Creating the snap "' . $request->get('title') . '" was successful.',
             ];
         } catch (\Exception $error) {
             return [
-                'error' => true,
-                'errorMessage' => "Unable to create the Snap.",
+                'error'        => TRUE,
+                'errorMessage' => 'Unable to create the Snap.',
             ];
         }
     }
