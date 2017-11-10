@@ -39,7 +39,11 @@ cd devSnaps-back
 composer install
 ```
 3. Create a `database/database.sqlite` file to store the Snap data (or use any sql server you'd prefer).
-4. That's it for the back-end preparation!
+4. Run the migration
+```bash
+artisan migrate
+```
+5. That's it for the back-end preparation!
 
 If you want to run the DevSnaps application, you need to clone the [front-end repo](https://github.com/AlexandreBonneau/devSnaps) as well then follow the instructions from [here](https://github.com/AlexandreBonneau/devSnaps#build-setup).<br>
 
